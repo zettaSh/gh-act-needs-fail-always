@@ -1,0 +1,16 @@
+name: needs-fail-always
+
+on: push
+
+jobs:
+  job-will-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
+
+  job-with-need-1:
+    runs-on: ubuntu-latest
+    needs: 'job-will-fail'
+    if: ${{ always() && jobs.job-will-fail.result == 'failure' }}
+    steps:
+      - run: echo Job With Need 1
